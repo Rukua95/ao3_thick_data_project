@@ -1,4 +1,4 @@
-package patos.ao3;
+package org.mdp.hadoop.cli;
 
 import java.io.IOException;
 
