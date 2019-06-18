@@ -1,4 +1,4 @@
-package org.mdp.hadoop.cli;
+package patos.ao3;
 
 import java.io.IOException;
 
@@ -145,7 +145,7 @@ public class CountCommonPairs {
         Configuration conf = new Configuration();
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         if (otherArgs.length != 2) {
-            System.err.println("Usage: "+CountPairs.class.getName()+" <in> <out>");
+            System.err.println("Usage: "+CountCommonPairs.class.getName()+" <in> <out>");
             System.exit(2);
         }
         String inputLocation = otherArgs[0];
@@ -161,11 +161,11 @@ public class CountCommonPairs {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-        job.setMapperClass(CountPairsMapper.class);
-        job.setCombinerClass(CountPairsReducer.class); // in this case a combiner is possible!
-        job.setReducerClass(CountPairsReducer.class);
+        job.setMapperClass(CountCommonPairsMapper.class);
+        job.setCombinerClass(CountCommonPairsReducer.class); // in this case a combiner is possible!
+        job.setReducerClass(CountCommonPairsReducer.class);
 
-        job.setJarByClass(CountPairs.class);
+        job.setJarByClass(CountCommonPairs.class);
         job.waitForCompletion(true);
     }
 }
