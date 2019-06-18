@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  */
 public class Main {
 
-    private static final String PREFIX = "org.mdp.hadoop.cli.";
+    private static final String PREFIX = "patos.ao3.";
     private static final String USAGE = "usage: " + Main.class.getName();
 
     /**
