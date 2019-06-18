@@ -19,27 +19,27 @@ import java.io.IOException;
  * Contains the main method, an inner Reducer class
  * and an inner Mapper class.
  *
- * @author El mejor grupo de patos
+ * @author Aidan
  */
-public class CountCommonPairs {
+public class CountWords {
 
     /**
      * Use this with line.split(SPLIT_REGEX) to get fairly nice
      * word splits.
      */
-    public static String SPLIT_REGEX = "\t";
-    public static String SUBSPLIT_REGEX = "( )*,( )*";
+    public static String SPLIT_REGEX = "[^\\p{L}]+";
 
     /**
      * Main method that sets up and runs the job
      *
      * @param args First argument is input, second is output
+     * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         if (otherArgs.length != 2) {
-            System.err.println("Usage: " + CountCommonPairs.class.getName() + " <in> <out>");
+            System.err.println("Usage: " + CountWords.class.getName() + " <in> <out>");
             System.exit(2);
         }
         String inputLocation = otherArgs[0];
@@ -55,11 +55,11 @@ public class CountCommonPairs {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-        job.setMapperClass(CountCommonPairsMapper.class);
-        job.setCombinerClass(CountCommonPairsReducer.class); // in this case a combiner is possible!
-        job.setReducerClass(CountCommonPairsReducer.class);
+        job.setMapperClass(CountWordsMapper.class);
+        job.setCombinerClass(CountWordsReducer.class); // in this case a combiner is possible!
+        job.setReducerClass(CountWordsReducer.class);
 
-        job.setJarByClass(CountCommonPairs.class);
+        job.setJarByClass(CountWords.class);
         job.waitForCompletion(true);
     }
 
@@ -78,9 +78,9 @@ public class CountCommonPairs {
      * <p>
      * MapValue will be IntWritable: a count: emit 1 for each occurrence of the word
      *
-     * @author El mejor grupo de patos
+     * @author Aidan
      */
-    public static class CountCommonPairsMapper extends Mapper<Object, Text, Text, IntWritable> {
+    public static class CountWordsMapper extends Mapper<Object, Text, Text, IntWritable> {
 
         private final IntWritable one = new IntWritable(1);
         private Text word = new Text();
@@ -89,30 +89,17 @@ public class CountCommonPairs {
         /**
          * Given the offset in bytes of a line (key) and a line (value),
          * we will output (word,1) for each word in the line.
+         *
+         * @throws InterruptedException
          */
         @Override
         public void map(Object key, Text value, Context output)
                 throws IOException, InterruptedException {
-
             String line = value.toString();
-
-            String[] columns = line.split(SPLIT_REGEX);
-            String tagsString = columns[3] + "," + columns[4];
-            String[] tags = tagsString.split(SUBSPLIT_REGEX);
-
-
-            for (int i = 1; i < tags.length; ++i) {
-                for (int j = i + 1; j < tags.length; ++j) {
-                    String tag1 = tags[i], tag2 = tags[j];
-                    if (tag1.equals("null") || tag2.equals("null"))
-                        continue;
-
-                    if (tag1.compareTo(tag2) > 0)
-                        tag1 = tag1 + "###" + tag2;
-                    else
-                        tag1 = tag2 + "###" + tag1;
-
-                    word.set(tag1);
+            String[] rawWords = line.split(SPLIT_REGEX);
+            for (String rawWord : rawWords) {
+                if (!rawWord.isEmpty()) {
+                    word.set(rawWord.toLowerCase());
                     output.write(word, one);
                 }
             }
@@ -136,8 +123,7 @@ public class CountCommonPairs {
      *
      * @author Aidan
      */
-    // ActorsInFilmsReducer
-    public static class CountCommonPairsReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class CountWordsReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         /**
          * Given a key (a word) and all values (partial counts) for
@@ -149,7 +135,6 @@ public class CountCommonPairs {
         @Override
         public void reduce(Text key, Iterable<IntWritable> values,
                            Context output) throws IOException, InterruptedException {
-
             int sum = 0;
             for (IntWritable value : values) {
                 sum += value.get();

@@ -23,8 +23,8 @@ public class Main {
             if (args.length < 1) {
                 StringBuffer sb = new StringBuffer();
                 sb.append("missing <utility> arg where <utility> one of");
-                sb.append("\n\t").append(FilterTheatrical.class.getSimpleName())
-                        .append(": Filter theatrical movies");
+                sb.append("\n\t").append(CountCommonPairs.class.getSimpleName())
+                        .append(": Count common pairs of tags");
                 sb.append("\n\t").append(SortWordCounts.class.getSimpleName())
                         .append(": Sort words by count descendin");
 
@@ -32,7 +32,7 @@ public class Main {
             }
 
 
-            Class<? extends Object> cls = Class.forName(PREFIX + args[0]);
+            Class<?> cls = Class.forName(PREFIX + args[0]);
 
             Method mainMethod = cls.getMethod("main", String[].class);
 
