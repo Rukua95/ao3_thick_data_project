@@ -19,6 +19,8 @@ dependencies {
     compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.3.0'
     // https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core
     compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-core', version: '2.3.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
 }
 
 compileKotlin {
