@@ -70,10 +70,10 @@ public class CountTagsPerYear {
             String cat = rawWords[3] + "," +  rawWords[4];
             String[] tags= cat.split(SUBSPLIT_REGEX);
 
-            String year = rawWords[7].split("-")[0];
+            String year_month = rawWords[7].split("-")[0] + "-" + rawWords[7].split("-")[1];
 
             for(String s1 : tags) {
-                String s = year + "###" + s1;
+                String s = year_month + "###" + s1;
                 word.set(s);
 
                 output.write(word, one);
