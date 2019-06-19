@@ -226,7 +226,7 @@ public class Twogram {
         "xx", "y2", "yj", "yl", "yr", "ys", "yt", "zi", "zz"};
     private final String[] punctuationMarks = new String[]{".", "¿", "?", "\"", "'", ",", "-", "–",
         "—", "!", "¡", ":", ";", "(", ")", "[", "]", "{", "}", "/", "\\", "#", "%", "+", "~", "*",
-        "^", "`", "¨", "´", "$", "&", "=", "_", "<", ">"};
+        "^", "`", "¨", "´", "$", "&", "=", "_", "<", ">", "”", "’"};
     private Text twoword = new Text();
 
     /**
@@ -241,6 +241,7 @@ public class Twogram {
       String[] columns = line.split(SPLIT_REGEX);
       if (columns[5].trim().equalsIgnoreCase("English")) {
         String text = columns[13];
+        text = text.toLowerCase();
         text = removePunctuation(text);
         text = removeStopwords(text);
         String[] words = text.split(SUBSPLIT_REGEX);
